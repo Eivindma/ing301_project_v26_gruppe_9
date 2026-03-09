@@ -1,7 +1,77 @@
 @startuml Domain
+skinparam style strictuml
+skinparam DefaultFontName Arial
+skinparam DefaultFontSize 16
+skinparam DefaultFontStyle bold
+skinparam ArrowThickness 2.2
+skinparam ArrowColor #gray
+hide empty members
 
-A -> B : Hello
 
+class "Builting" as building {
+string: streetName
+string: buildingNr
+}
 
+class "Floor" as floor {
+string: floorNr
+
+}
+
+class "Room" as room {
+string: roomName
+float: areal
+}
+
+class "Device" as device {
+int: id
+dictionary: productProperties(producer, model, description)
+string: nickName
+string: registeredRoom
+}
+
+class "Sensors" as sensor {
+lastMesData()
+historicalMesData()
+dictionary: mesData(date, time, value, mesUnit)
+}
+
+Class "Actuators" as actuator {
+
+}
+
+class "Temperature sensor" as temp_sensor {
+
+}
+
+class "Air quality sensor" as aq_sensor{
+
+}
+
+class "Co2 sensor" as co2_sensor{
+
+}
+
+class "Movement sensor" as movement_sensor {
+
+} 
+
+building "1" *-- "1..*" floor 
+
+floor "1" *-- "1" room 
+
+room "1" *-- "1" device 
+
+device "1" *-- "1" sensor 
+
+device "1" *-- "1" actuator 
+
+sensor "1" *-- "1" temp_sensor 
+
+sensor "1" *-- "1" aq_sensor 
+
+sensor "1" *-- "1" co2_sensor 
+
+sensor "1" *-- "1" movement_sensor 
 
 @enduml

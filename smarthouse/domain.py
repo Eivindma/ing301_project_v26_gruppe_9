@@ -1,3 +1,7 @@
+import sys
+import sqlite3
+
+
 class Measurement:
     """
     This class represents a measurement taken from a sensor.
@@ -11,6 +15,52 @@ class Measurement:
 
 
 # TODO: Add your own classes here!
+
+class Building:
+    def __init__(self, streetName: str, buildingNr: int, ):
+        self.building = []
+
+    def add(self, streetName, buildingNr):
+        self.building.append([streetName, buildingNr])
+
+
+
+
+class Floor(Building):
+    def __init__(self, floorNr):
+        self.floorNr = floorNr
+
+    def floorAreal(self):
+        
+
+class Room(Floor):
+    def __init__(self, roomName, areal):
+        self.roomName = roomName
+        self.areal = areal
+        
+
+class Units():
+    def __init__(self, unitName):
+        self.unitName = unitName
+
+class Sensor():
+    pass
+
+class TemperatureSensor():
+    pass
+
+class AirQualitySensor():
+    pass
+
+class Co2Sensor():
+    pass
+
+class MovementSensor():
+    pass
+
+class Actuator():
+    pass
+
 
 
 class SmartHouse:
@@ -28,6 +78,7 @@ class SmartHouse:
         This method registers a new floor at the given level in the house
         and returns the respective floor object.
         """
+
 
     def register_room(self, floor, room_size, room_name = None):
         """
@@ -74,3 +125,26 @@ class SmartHouse:
         """
         pass
 
+
+
+class startMenu:
+    def __init__(self):
+        pass
+
+
+
+    def quit(self):
+        sys.exit()
+
+
+
+
+print("Choose what you want to do \n1. Open existing project\n2. Create new project 3. Quit")
+input1 = input()
+
+if input == 1:
+    print("Write name of new project")
+    input2 = input()
+    #sqlite3.
+elif input == 3:
+    startMenu().quit()
