@@ -20,40 +20,35 @@ class Building:
     def __init__(self, streetName: str, buildingNr: int, ):
         self.building = []
 
-    def add(self, streetName, buildingNr):
-        self.building.append([streetName, buildingNr])
+    def add(self, id, name):
+        self.id = id
+        self.name = name
 
 
 
 
 class Floor(Building):
-    def __init__(self, floorNr):
-        self.floorNr = floorNr
+    def __init__(self, number):
+        self.number = number
 
-    def floorAreal(self):
+    def get_area(self):
+        pass
         
 
 class Room(Floor):
-    def __init__(self, roomName, areal):
-        self.roomName = roomName
-        self.areal = areal
+    def __init__(self, name, area):
+        self.name = name
+        self.area = area
         
 
-class Units():
+class Device():
     def __init__(self, unitName):
         self.unitName = unitName
 
 class Sensor():
     pass
 
-class TemperatureSensor():
-    pass
 
-class AirQualitySensor():
-    pass
-
-class Co2Sensor():
-    pass
 
 class MovementSensor():
     pass

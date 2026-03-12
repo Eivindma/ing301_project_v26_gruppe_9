@@ -9,69 +9,69 @@ hide empty members
 
 
 class "Builting" as building {
-string: streetName
-string: buildingNr
+string: id
+string: name
 }
 
 class "Floor" as floor {
-string: floorNr
+int: number
+get_area()
 
 }
 
 class "Room" as room {
-string: roomName
+string: name
 float: areal
 }
 
 class "Device" as device {
-int: id
-dictionary: productProperties(producer, model, description)
+string: id
+string: manufacturer
+string: model
+sting: deviceType
 string: nickName
-string: registeredRoom
 }
 
-class "Sensors" as sensor {
-lastMesData()
-historicalMesData()
+class "Sensor" as sensor {
+lastMeasurement()
+historicalMeasurement()
 dictionary: mesData(date, time, value, mesUnit)
 }
 
 Class "Actuators" as actuator {
-
+getState() : State
+setState(State)
 }
 
-class "Temperature sensor" as temp_sensor {
-
+Class "Measurement" as meas {
+DataeTime : timestamp
+float : value
+string : unit
 }
 
-class "Air quality sensor" as aq_sensor{
-
+Class "State" as state {
+bool : isOn
+float : targetTemperature
+int : dimLevel
 }
 
-class "Co2 sensor" as co2_sensor{
 
-}
+building "1" *-- "1..*" floor : Contains
 
-class "Movement sensor" as movement_sensor {
+floor "1" *-- "1..*" room  : Contains
 
-} 
+room "1" *-- "1..*" device : Contains
 
-building "1" *-- "1..*" floor 
+room "1" <--  device : Located in
 
-floor "1" *-- "1" room 
+device  <--  sensor 
 
-room "1" *-- "1" device 
+device  <--  actuator 
 
-device "1" *-- "1" sensor 
+sensor "1" *-- "0..*" meas : Produces
 
-device "1" *-- "1" actuator 
+actuator "1" *-- "0..1" state : Sets
 
-sensor "1" *-- "1" temp_sensor 
 
-sensor "1" *-- "1" aq_sensor 
-
-sensor "1" *-- "1" co2_sensor 
-
-sensor "1" *-- "1" movement_sensor 
 
 @enduml
