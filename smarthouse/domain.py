@@ -1,18 +1,6 @@
 import sys
 import sqlite3
-
-
-class Measurement:
-    """
-    This class represents a measurement taken from a sensor.
-    """
-
-    def __init__(self, timestamp, value, unit):
-        self.timestamp = timestamp
-        self.value = value
-        self.unit = unit
-
-
+import datetime as dt
 
 # TODO: Add your own classes here!
 
@@ -24,10 +12,7 @@ class Building:
         self.id = id
         self.name = name
 
-
-
-
-class Floor(Building):
+class Floor:
     def __init__(self, number):
         self.number = number
 
@@ -42,19 +27,52 @@ class Room(Floor):
         
 
 class Device():
-    def __init__(self, unitName):
-        self.unitName = unitName
+    def __init__(self, id, manufacturer, model, 
+                 deviceType, nickName):
+        self.id = id
+        self.manufacturer = manufacturer
+        self.model = model
+        self.deviceType = deviceType
+        self.nickName = nickName
 
 class Sensor():
-    pass
+    def __init__(self):
+        pass
+    def lastMeasurement(self):
+        pass
 
-
-
-class MovementSensor():
-    pass
+    def historicalMeasurement(self):
+        pass
 
 class Actuator():
-    pass
+    def __init__(self) -> State:
+        pass
+
+    def getState(self):
+        pass
+    
+    def setState(self, State):
+        pass
+
+class Measurement():
+    """
+    This class represents a measurement taken from a sensor.
+    """
+
+
+    def __init__(self, timestamp:dt.datetime, 
+                 value:float, unit:str):
+        self.timestamp = timestamp
+        self.value = value
+        self.unit = unit
+
+
+class State():
+    def __init__(self, isOn:bool, 
+                 targetTemperature:float, dimLevel:int):
+        self.isOn = isOn
+        self.targetTemperature = targetTemperature
+        self.dimLevel = dimLevel
 
 
 
@@ -120,8 +138,6 @@ class SmartHouse:
         """
         pass
 
-
-
 class startMenu:
     def __init__(self):
         pass
@@ -130,9 +146,6 @@ class startMenu:
 
     def quit(self):
         sys.exit()
-
-
-
 
 print("Choose what you want to do \n1. Open existing project\n2. Create new project 3. Quit")
 input1 = input()
