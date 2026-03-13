@@ -2,6 +2,25 @@ import sys
 import sqlite3
 import datetime as dt
 
+class Measurement():
+    """
+    This class represents a measurement taken from a sensor.
+    """
+
+    def __init__(self, timestamp:dt.datetime, 
+                 value:float, unit:str):
+        self.timestamp = timestamp
+        self.value = value
+        self.unit = unit
+
+
+class State():
+    def __init__(self, isOn:bool, 
+                 targetTemperature:float, dimLevel:int):
+        self.isOn = isOn
+        self.targetTemperature = targetTemperature
+        self.dimLevel = dimLevel
+
 # TODO: Add your own classes here!
 
 class Building:
@@ -35,44 +54,36 @@ class Device():
         self.deviceType = deviceType
         self.nickName = nickName
 
-class Sensor():
+class Sensor(Measurement):
     def __init__(self):
-        pass
+        super().__init__
+        self.value = super().value
+        self.timestamp = super().timestamp
+        self.unit = super().unit
+        self.valueHistory = []
+
+
     def lastMeasurement(self):
-        pass
+        return [self.timestamp, self.value, self.unit]
 
     def historicalMeasurement(self):
         pass
 
-class Actuator():
-    def __init__(self) -> State:
-        pass
+class Actuator(State):
+    def __init__(self):
+        super().__init__
+        self.state = super().isOn
 
-    def getState(self):
-        pass
+    def getState(self,):
+        return self.state
     
-    def setState(self, State):
-        pass
-
-class Measurement():
-    """
-    This class represents a measurement taken from a sensor.
-    """
+    def setState(self, state):
+        self.state = state
 
 
-    def __init__(self, timestamp:dt.datetime, 
-                 value:float, unit:str):
-        self.timestamp = timestamp
-        self.value = value
-        self.unit = unit
 
 
-class State():
-    def __init__(self, isOn:bool, 
-                 targetTemperature:float, dimLevel:int):
-        self.isOn = isOn
-        self.targetTemperature = targetTemperature
-        self.dimLevel = dimLevel
+
 
 
 

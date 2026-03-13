@@ -21,7 +21,7 @@ get_area()
 
 class "Room" as room {
 string: name
-float: areal
+float: area
 }
 
 class "Device" as device {
@@ -35,7 +35,6 @@ string: nickName
 class "Sensor" as sensor {
 lastMeasurement()
 historicalMeasurement()
-dictionary: mesData(date, time, value, mesUnit)
 }
 
 Class "Actuators" as actuator {
