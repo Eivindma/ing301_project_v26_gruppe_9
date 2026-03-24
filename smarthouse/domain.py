@@ -1,5 +1,5 @@
 import sys
-import sqlite3
+import sqlite3 as sq
 import datetime as dt
 
 class Measurement():
@@ -167,3 +167,53 @@ if input == 1:
     #sqlite3.
 elif input == 3:
     startMenu().quit()
+    
+    
+conn = sq.Connection("dbfile.sqlite")
+cursor = conn.cursor()
+
+cursor.execute("")
+conn.commit()
+cursor.close()
+
+def main():
+    is_active = True
+    
+    connection = sq.Connection("smarthouse.sqlite")
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT timestamp, latitude, longitude FROM routes")
+        for row in cursor.fetchall():
+            timestamp = datetime.fromisoformat(row[0])
+            latitude = row[1]
+            longitude = row[2]
+            route.add(Point(timestamp, latitude, longitude))
+    except sqlite3.OperationalError:
+        print("No existing route found in route.sqlite")
+    finally:
+        cursor.close()
+        connection.close()
+
+    while is_active:
+        print("---- Bike Computer ----\nSelect option:\n1. Track route\n2. Show Route\n3. Save\n4. Quit\n")
+        user_input = input(">>> ")
+        if not user_input.isdigit() and int(user_input) in {1, 2, 3, 4}:
+            print(f"Unrecognized input: '{user_input}'")
+        else:
+            selected_option = int(user_input)
+            if selected_option == 1:
+                no_sample = int(input("How many segments do you want to track: "))
+                for _ in range(no_sample):
+                    route.add(sensor.sample())
+                print(f"recorded {no_sample} segments")
+            elif selected_option ==2:
+                print(route)
+            elif selected_option == 3:
+                route.save()
+            else:
+                is_active = False
+    print("shutting down")
+
+
+if __name__ == "__main__":
+    main()
