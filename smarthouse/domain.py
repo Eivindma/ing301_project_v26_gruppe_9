@@ -24,35 +24,63 @@ class State():
 # TODO: Add your own classes here!
 
 class Building:
-    def __init__(self, streetName: str, buildingNr: int, ):
-        self.building = []
-
-    def add(self, id, name):
-        self.id = id
-        self.name = name
+    def __init__(self):
+        self.floors : list[Floor] = []
+        
+    def add(self, floor: Floor):
+        self.floors.append(floor)
+        return floor
+        
+    
 
 class Floor:
-    def __init__(self, number):
-        self.number = number
+    def __init__(self, level : int):
+        self.rooms : list[Room] = []
+        self.level = level
 
     def get_area(self):
-        pass
+        return sum(room.area for room in self.rooms)
+    
+    def add(self, room: Room):
+        
+        self.rooms.append(room)
+        return room
+        
         
 
-class Room(Floor):
-    def __init__(self, name, area):
+class Room:
+    def __init__(self, floor, area, name):
+        self.floor = floor
         self.name = name
         self.area = area
+        self.devices = []
+        
+    def add(self, device:Device):
+        self.devices.append(device)
+        
         
 
 class Device():
-    def __init__(self, id, manufacturer, model, 
-                 deviceType, nickName):
+    def __init__(self, id, supplier, model_name, 
+                 deviceType, nickName, sensor: Sensor, actuator: Actuator):
         self.id = id
-        self.manufacturer = manufacturer
-        self.model = model
+        self.supplier = supplier
+        self.model_name = model_name
         self.deviceType = deviceType
         self.nickName = nickName
+        #self.Sensor = 
+        
+    def is_sensor(self):
+        pass
+    
+    def is_sensor(self):
+        pass
+    
+    def get_device_type(self):
+        pass
+    
+    
+        
 
 class Sensor(Measurement):
     def __init__(self):
@@ -87,7 +115,8 @@ class Actuator(State):
 
 
 
-class SmartHouse:
+class SmartHouse():
+
     """
     This class serves as the main entity and entry point for the SmartHouse system app.
     Do not delete this class nor its predefined methods since other parts of the
@@ -97,11 +126,14 @@ class SmartHouse:
     house's physical layout) as well as register and modify smart devices and their state.
     """
 
-    def register_floor(self, level):
+    def register_floor(self, floor):
         """
         This method registers a new floor at the given level in the house
         and returns the respective floor object.
         """
+        
+        Building.add(Building(), Floor(floor))
+        
 
 
     def register_room(self, floor, room_size, room_name = None):
@@ -109,7 +141,7 @@ class SmartHouse:
         This methods registers a new room with the given room areal size 
         at the given floor. Optionally the room may be assigned a mnemonic name.
         """
-        pass
+        Floor.add(Floor(), Room(floor, room_size, room_name))
 
 
     def get_floors(self):
@@ -149,71 +181,3 @@ class SmartHouse:
         """
         pass
 
-class startMenu:
-    def __init__(self):
-        pass
-
-
-
-    def quit(self):
-        sys.exit()
-
-print("Choose what you want to do \n1. Open existing project\n2. Create new project 3. Quit")
-input1 = input()
-
-if input == 1:
-    print("Write name of new project")
-    input2 = input()
-    #sqlite3.
-elif input == 3:
-    startMenu().quit()
-    
-    
-conn = sq.Connection("dbfile.sqlite")
-cursor = conn.cursor()
-
-cursor.execute("")
-conn.commit()
-cursor.close()
-
-def main():
-    is_active = True
-    
-    connection = sq.Connection("smarthouse.sqlite")
-    cursor = connection.cursor()
-    try:
-        cursor.execute("SELECT timestamp, latitude, longitude FROM routes")
-        for row in cursor.fetchall():
-            timestamp = datetime.fromisoformat(row[0])
-            latitude = row[1]
-            longitude = row[2]
-            route.add(Point(timestamp, latitude, longitude))
-    except sqlite3.OperationalError:
-        print("No existing route found in route.sqlite")
-    finally:
-        cursor.close()
-        connection.close()
-
-    while is_active:
-        print("---- Bike Computer ----\nSelect option:\n1. Track route\n2. Show Route\n3. Save\n4. Quit\n")
-        user_input = input(">>> ")
-        if not user_input.isdigit() and int(user_input) in {1, 2, 3, 4}:
-            print(f"Unrecognized input: '{user_input}'")
-        else:
-            selected_option = int(user_input)
-            if selected_option == 1:
-                no_sample = int(input("How many segments do you want to track: "))
-                for _ in range(no_sample):
-                    route.add(sensor.sample())
-                print(f"recorded {no_sample} segments")
-            elif selected_option ==2:
-                print(route)
-            elif selected_option == 3:
-                route.save()
-            else:
-                is_active = False
-    print("shutting down")
-
-
-if __name__ == "__main__":
-    main()
