@@ -29,7 +29,11 @@ class Building:
         
     def add(self, floor: Floor):
         self.floors.append(floor)
-        return floor
+        self.floors.sort(key=lambda f: f.level) #Sorting list after adding
+        
+    
+    def get_floors(self):
+        return self.floors
         
     
 
@@ -45,6 +49,16 @@ class Floor:
         
         self.rooms.append(room)
         return room
+    
+    def get_rooms(self):
+        all_rooms = []
+        for floor in self.get_floors():
+            all_rooms.extend(floor.get_rooms())
+        return self.rooms
+    
+    def __repr__(self):
+        area = self.get_area()
+        return f"Floor(level={self.level}, rooms={len(self.rooms)}, area={area:.1f}m²)"
         
         
 
@@ -57,6 +71,11 @@ class Room:
         
     def add(self, device:Device):
         self.devices.append(device)
+        
+    def __repr__(self):
+        return (f"Room(name='{self.name}', "
+            f"area={self.area:.1f}m², "
+            f"floor_level={self.floor.level})")
         
         
 
@@ -79,9 +98,6 @@ class Device():
     def get_device_type(self):
         pass
     
-    
-        
-
 class Sensor(Measurement):
     def __init__(self):
         super().__init__
@@ -97,6 +113,21 @@ class Sensor(Measurement):
     def historicalMeasurement(self):
         pass
 
+class Motion_sensor:
+    pass
+
+class Temperature_sensor:
+    pass
+
+class Humidity_sensor:
+    pass
+
+class Current_sensor:
+    pass
+    
+class Co2_sensor:
+    pass
+
 class Actuator(State):
     def __init__(self):
         super().__init__
@@ -109,13 +140,27 @@ class Actuator(State):
         self.state = state
 
 
+    
+class Panel_heater:
+    pass
 
+class Air_condition:
+    pass
 
+class Humidifyer:
+    pass
 
+class Socket:
+    pass
 
+class Light:
+    pass
 
-
-class SmartHouse():
+class SmartHouse:
+    def __init__(self):
+        self.building = Building()
+        
+        
 
     """
     This class serves as the main entity and entry point for the SmartHouse system app.
@@ -126,13 +171,15 @@ class SmartHouse():
     house's physical layout) as well as register and modify smart devices and their state.
     """
 
-    def register_floor(self, floor):
+    def register_floor(self, level):
         """
         This method registers a new floor at the given level in the house
         and returns the respective floor object.
         """
         
-        Building.add(Building(), Floor(floor))
+        floor = Floor(level)
+        self.building.add(floor)
+        return floor
         
 
 
@@ -141,7 +188,12 @@ class SmartHouse():
         This methods registers a new room with the given room areal size 
         at the given floor. Optionally the room may be assigned a mnemonic name.
         """
-        Floor.add(Floor(), Room(floor, room_size, room_name))
+        if not isinstance(floor, Floor):
+            raise TypeError(f"Expected Floor object, got {type(floor)}")
+    
+        room = Room(floor, room_size, room_name)   # Create the room correctly
+        floor.add(room)                            # Add it to the actual floor
+        return room
 
 
     def get_floors(self):
@@ -151,7 +203,7 @@ class SmartHouse():
         registered a basement (level=0), a ground floor (level=1) and a first floor 
         (leve=1), then the resulting list contains these three flors in the above order.
         """
-        pass
+        return self.building.get_floors()
 
 
     def get_rooms(self):
@@ -159,13 +211,16 @@ class SmartHouse():
         This methods returns the list of all registered rooms in the house.
         The resulting list has no particular order.
         """
-        pass
+        self.floor.get_rooms()
 
 
     def get_area(self):
         """
         This methods return the total area size of the house, i.e. the sum of the area sizes of each room in the house.
         """
+        #for room in all_rooms:
+            #area = 0
+            #area += room.area
 
 
     def register_device(self, room, device):
