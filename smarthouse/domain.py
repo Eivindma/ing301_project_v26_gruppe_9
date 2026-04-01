@@ -81,17 +81,15 @@ class Room:
 
 class Device():
     def __init__(self, id, supplier, model_name, 
-                 deviceType, nickName, sensor: Sensor, actuator: Actuator):
+                 deviceType, nickName, sensors: Sensor, actuators: Actuator):
         self.id = id
         self.supplier = supplier
         self.model_name = model_name
         self.deviceType = deviceType
         self.nickName = nickName
-        #self.Sensor = 
+        self.Sensors = []
+        self.actuators = []
         
-    def is_sensor(self):
-        pass
-    
     def is_sensor(self):
         pass
     
@@ -211,16 +209,21 @@ class SmartHouse:
         This methods returns the list of all registered rooms in the house.
         The resulting list has no particular order.
         """
-        self.floor.get_rooms()
+        rooms = []
+        floors = self.building.get_floors()
+        for floor in floors:
+            rooms.extend(floor.get_rooms)
+        return rooms
+
 
 
     def get_area(self):
         """
         This methods return the total area size of the house, i.e. the sum of the area sizes of each room in the house.
         """
-        #for room in all_rooms:
-            #area = 0
-            #area += room.area
+        for room in all_rooms:
+            area = 0
+            area += room.area
 
 
     def register_device(self, room, device):
