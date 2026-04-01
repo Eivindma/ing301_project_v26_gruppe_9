@@ -51,9 +51,11 @@ class Floor:
         return room
     
     def get_rooms(self):
+        '''
         all_rooms = []
         for floor in self.get_floors():
-            all_rooms.extend(floor.get_rooms())
+            all_rooms.extend(floor.get_rooms())'''
+        
         return self.rooms
     
     def __repr__(self):
@@ -67,7 +69,7 @@ class Room:
         self.floor = floor
         self.name = name
         self.area = area
-        self.devices = []
+        self.devices: list[Device] = []
         
     def add(self, device:Device):
         self.devices.append(device)
@@ -201,7 +203,7 @@ class SmartHouse:
         registered a basement (level=0), a ground floor (level=1) and a first floor 
         (leve=1), then the resulting list contains these three flors in the above order.
         """
-        return self.building.get_floors()
+        return sorted(self.building.floors, key=lambda f: f.level)
 
 
     def get_rooms(self):
@@ -210,32 +212,40 @@ class SmartHouse:
         The resulting list has no particular order.
         """
         rooms = []
-        floors = self.building.get_floors()
-        for floor in floors:
-            rooms.extend(floor.get_rooms)
+        for floor in self.building.floors:
+            rooms.extend(floor.rooms)
         return rooms
-
 
 
     def get_area(self):
         """
         This methods return the total area size of the house, i.e. the sum of the area sizes of each room in the house.
         """
-        for room in all_rooms:
-            area = 0
-            area += room.area
+        return sum(room.area for room in self.get_rooms())
 
 
-    def register_device(self, room, device):
+    def register_device(self, room: Room, device: Device):
         """
         This methods registers a given device in a given room.
         """
-        pass
+        if hasattr(device, 'room') and device.room is not None:
+            if device in device.room.devices:
+                device.room.devices.remove(device)
+
+        room.add(device)
+        device.room = room
 
     
     def get_device(self, device_id):
         """
         This method retrieves a device object via its id.
         """
-        pass
+        device_found = False
+        for device in device.room.devices:
+            if hasattr(device, "device_id") == device_id:
+                device_found = True
+                return device
+            else:
+                pass
+
 
