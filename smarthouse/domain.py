@@ -97,6 +97,7 @@ class Device():
     
     def get_device_type(self):
         pass
+
     
 class Sensor(Measurement):
     def __init__(self):
