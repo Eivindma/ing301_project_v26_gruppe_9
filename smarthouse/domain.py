@@ -1,17 +1,21 @@
 import sys
 import sqlite3 as sq
-import datetime as dt
+import datetime
+import random
+
 
 class Measurement():
     """
     This class represents a measurement taken from a sensor.
     """
 
-    def __init__(self, timestamp:dt.datetime, 
-                 value:float, unit:str):
-        self.timestamp = timestamp
+    def __init__(self, timestamp: str, 
+                 value:float, unit:str) -> None:
         self.value = value
+        self.timestamp = timestamp
         self.unit = unit
+        self.valueHistory = []
+
 
 
 class State():
@@ -65,9 +69,9 @@ class Floor:
         
 
 class Room:
-    def __init__(self, floor, area, name):
+    def __init__(self, floor, area, room_name):
         self.floor = floor
-        self.name = name
+        self.room_name = room_name
         self.area = area
         self.devices: list[Device] = []
         
@@ -82,15 +86,12 @@ class Room:
         
 
 class Device():
-    def __init__(self, id, supplier, model_name, 
-                 deviceType, nickName, sensors: Sensor, actuators: Actuator):
+    def __init__(self, id: str, model_name: str, supplier: str, device_type: str):
         self.id = id
+        self.model_name = model_name 
         self.supplier = supplier
-        self.model_name = model_name
-        self.deviceType = deviceType
-        self.nickName = nickName
-        self.Sensors = []
-        self.actuators = []
+        self.device_type = device_type
+        self.room : Optional[Room] = None
         
     def is_sensor(self):
         pass
@@ -99,63 +100,64 @@ class Device():
         pass
 
     
-class Sensor(Measurement):
-    def __init__(self):
-        super().__init__
-        self.value = super().value
-        self.timestamp = super().timestamp
-        self.unit = super().unit
-        self.valueHistory = []
+class Sensor(Device):
+    def __init__(self, id,model_name, supplier, device_type,unit:str = ""):
+        super().__init__(id, model_name, supplier, device_type)
+        self.unit = unit
+        
 
-
-    def lastMeasurement(self):
-        return [self.timestamp, self.value, self.unit]
+    def last_measurement(self):
+        return Measurement(datetime.datetime.now().isoformat(), random.random() * 10, self.unit)
 
     def historicalMeasurement(self):
         pass
-
-class Motion_sensor:
-    pass
-
-class Temperature_sensor:
-    pass
-
-class Humidity_sensor:
-    pass
-
-class Current_sensor:
-    pass
+        
+    def is_actuator(self):
+        return False
     
-class Co2_sensor:
-    pass
+    def is_sensor(self):
+        return True
 
-class Actuator(State):
-    def __init__(self):
-        super().__init__
-        self.state = super().isOn
 
-    def getState(self,):
+class Actuator(Device):
+    def __init__(self, id, model_name, supplier, device_type):
+        super().__init__(id, model_name, supplier, device_type)
+        
+
+    def is_actuator(self):
+        return True
+    
+    def is_sensor(self):
+        return False
+    
+
+    def get_state(self,):
         return self.state
     
-    def setState(self, state):
-        self.state = state
+    def turn_on(self, target_value: Optional[float] = None):
+        if target_value:
+            self.state = target_value
+        else:
+            self.state = True
 
+    def turn_off(self):
+        self.state = False
 
+    def is_active(self) -> bool:
+        return self.state is not False
+
+class Actuator_with_sensor(Actuator, Sensor):
+
+    def __init__(self, id: str, model_name: str, supplier: str, device_type: str):
+        super().__init__(id, model_name, supplier, device_type)
+
+    def is_actuator(self):
+        return True
     
-class Panel_heater:
-    pass
+    def is_sensor(self):
+        return True
+        
 
-class Air_condition:
-    pass
-
-class Humidifyer:
-    pass
-
-class Socket:
-    pass
-
-class Light:
-    pass
 
 class SmartHouse:
     def __init__(self):
@@ -237,16 +239,20 @@ class SmartHouse:
         device.room = room
 
     
-    def get_device(self, device_id):
+    def get_devices(self) -> List[Device]:
         """
         This method retrieves a device object via its id.
         """
-        device_found = False
-        for device in device.room.devices:
-            if hasattr(device, "device_id") == device_id:
-                device_found = True
-                return device
-            else:
-                pass
+        result = []
+        for r in self.get_rooms():
+            result.extend(r.devices)
+        return result
 
-
+    def get_device_by_id(self, device_id: str) -> Optional[Device]:
+        """
+        This method retrieves a device object via its id.
+        """
+        for d in self.get_devices():
+            if d.id == device_id:
+                return d
+        return None
