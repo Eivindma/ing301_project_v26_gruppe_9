@@ -19,11 +19,11 @@ class Measurement():
 
 
 class State():
-    def __init__(self, isOn:bool, 
-                 targetTemperature:float, dimLevel:int):
-        self.isOn = isOn
-        self.targetTemperature = targetTemperature
-        self.dimLevel = dimLevel
+    def __init__(self, is_on:bool, 
+                 target_temperature:float, dim_level:int):
+        self.is_on = is_on
+        self.targetTemperature = target_temperature
+        self.dim_level = dim_level
 
 # TODO: Add your own classes here!
 
@@ -55,10 +55,6 @@ class Floor:
         return room
     
     def get_rooms(self):
-        '''
-        all_rooms = []
-        for floor in self.get_floors():
-            all_rooms.extend(floor.get_rooms())'''
         
         return self.rooms
     
@@ -93,11 +89,6 @@ class Device():
         self.device_type = device_type
         self.room : Optional[Room] = None
         
-    def is_sensor(self):
-        pass
-    
-    def get_device_type(self):
-        pass
 
     
 class Sensor(Device):
@@ -109,7 +100,7 @@ class Sensor(Device):
     def last_measurement(self):
         return Measurement(datetime.datetime.now().isoformat(), random.random() * 10, self.unit)
 
-    def historicalMeasurement(self):
+    def historical_measurement(self):
         pass
         
     def is_actuator(self):

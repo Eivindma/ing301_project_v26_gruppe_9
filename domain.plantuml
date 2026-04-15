@@ -9,51 +9,83 @@ hide empty members
 
 
 class "Builting" as building {
-string: id
-string: name
+list: floors
+add()
+get_floors()
 }
 
 class "Floor" as floor {
-int: number
+list: rooms
+int: level
 get_area()
+add()
+get_rooms()
+
 
 }
 
 class "Room" as room {
-string: name
+int: floor
+string: room_name
 float: area
+list: devices
+add()
 }
 
 class "Device" as device {
 string: id
-string: manufacturer
-string: model
-sting: deviceType
+string: model_name
+string: supplier
+sting: device_type
 string: nickName
 }
 
 class "Sensor" as sensor {
-lastMeasurement()
-historicalMeasurement()
+string: unit
+last_measurement()
+historical_measurement()
+is_sensor()
+is_actuator()
 }
 
 Class "Actuators" as actuator {
-getState() : State
-setState(State)
+is_actuator()
+is_sensor()
+get_state()
+turn_on()
+turn_off()
+is_active()
+}
+
+Class "Actuators with sensor" as actuator_with_sensor {
+is_actuator()
+is_sensor()
 }
 
 Class "Measurement" as meas {
-DataeTime : timestamp
+string : timestamp
 float : value
 string : unit
 }
 
 Class "State" as state {
-bool : isOn
-float : targetTemperature
-int : dimLevel
+bool : is_on
+float : target_temperature
+int : dim_level
 }
 
+Class "Smarthouse" as smarthouse {
+register_floor()
+register_room()
+get_floors()
+get_rooms()
+get_area()
+register_device()
+get_devices()
+get_device_by_id()
+}
+
+smarthouse "1" *-- "1..*" building : Contains
 
 building "1" *-- "1..*" floor : Contains
 
@@ -65,11 +97,17 @@ room "1" <--  device : Located in
 
 device  <--  sensor 
 
-device  <--  actuator 
+device  <--  actuator
+
+device  <--  actuator_with_sensor 
 
 sensor "1" *-- "0..*" meas : Produces
 
 actuator "1" *-- "0..1" state : Sets
+
+actuator_with_sensor "1" *-- "0..*" meas : Produces
+
+actuator_with_sensor "1" *-- "0..1" state : Sets
 
 
 
